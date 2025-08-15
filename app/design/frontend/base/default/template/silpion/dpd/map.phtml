@@ -1,0 +1,110 @@
+<?php
+/**
+ * @var LCB_Paczkomaty_Index_Map
+ */
+$apiKey = Mage::getStoreConfig('carriers/dpd/widget_api_key');
+
+if ($this->getIsEnabled() || !$apiKey) {
+    return;
+}
+?>
+
+<script type="text/javascript">
+    Singleton.get(Review).applyResponse = function (review) {
+        var shippingMethod = jQuery('#iwd_opc_shipping_method_group_select').val();
+        if (shippingMethod === 'dpd_pickup') {
+            initDPDMap();
+        } else {
+            deInitDPDMap();
+        }
+        if (shippingMethod === 'lcbpaczkomaty') {
+            initPaczkomatyMap();
+        } else {
+            deInitPaczkomatyMap();
+        }
+    };
+
+    var shippingMethod = jQuery('#iwd_opc_shipping_method_group_select').val();
+    if (shippingMethod === 'dpd_pickup') {
+        initDPDMap();
+    }
+    if (shippingMethod === 'lcbpaczkomaty') {
+        initPaczkomatyMap();
+    }
+
+</script>
+
+<div class="modal" id="dpd_map_modal" tabindex="-1" role="dialog" aria-labelledby="dpd_map_modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+                <script id="dpd-widget" type="text/javascript">
+                    // ### Poniższa funkcja wywoływana jest w momencie wyboru punktu przez użytkownika. ###
+                    // ### Wymagana jest samodzielna implementacja poniższej funkcji. ###
+                    // ### Logikę biznesową należy dostosować do własnego serwisu. ###
+                    function pointSelected(pointID) {
+                        // ### Przykładowo przekaż pointID jako wartość input lub wywołaj zapytanie AJAX. ###
+                        console.log('Wybrano punkt: ' + pointID)
+                        jQuery('#dpd_map_modal').modal('hide');
+                        jQuery.ajax({
+                            type: "POST",
+                            url: "<?php echo $this->getUrl('silpion_dpd/ajax/savePoint'); ?>",
+                            data: {'point': pointID},
+                            success: function (result) {
+                                console.log(result);
+                                jQuery('#dpdInput').html(pointID);
+                            },
+                            error: function (response) {
+                                console.log(response);
+                            }
+                        });
+
+                    }
+                </script>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        function initDPDMap() {
+            jQuery.getScript("https://pudofinder.dpd.com.pl/source/dpd_widget.js?key=<?= $apiKey ?>");
+            jQuery("#dpd_map_modal").modal();
+            jQuery('.modal-backdrop').removeClass("modal-backdrop");
+            jQuery('#iwd_opc_shipping_load_container').append('<p id="dpdInput">Nie wybrano punktu DPD</p>');
+        }
+        function deInitDPDMap() {
+            jQuery('#dpd_map_modal').modal('hide');
+            jQuery('#dpdInput').remove();
+        }
+
+    </script>          
+    <style type="text/css">
+        #dpd_map_modal {
+            position: absolute;
+        }
+        .nav-container {
+            z-index: 1;
+        }
+        .modal-dialog {
+            width: 80%;
+            height: 80vh;
+        }
+        .modal-dialog iframe {
+            width: 100%;
+            height: 80vh;
+        }
+        
+        @media (max-width: 720px) {
+            #dpd_map_modal {
+                position: absolute;
+            }
+            #dpd_map_modal .modal-dialog {
+                position: fixed;
+                width: 100%;
+            }
+        }
+    </style>
+
+</div>

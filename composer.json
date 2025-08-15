@@ -1,0 +1,12 @@
+{
+    "name": "tomasz-silpion/openmage-dpd",
+    "type": "magento-module",
+    "description": "DPD shipping for OpenMage.",
+    "license": [
+        "OSL-3.0",
+        "AFL-3.0"
+    ],
+    "extra": {
+        "magento-root-dir": "test/"
+    }
+}

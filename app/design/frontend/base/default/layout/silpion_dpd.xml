@@ -1,0 +1,21 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">
+    <silpion_dpd_map>
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/lcb_paczkomaty.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/lcb_paczkomaty.css</name>
+            </action>
+        </reference>        
+        <reference name="content">   
+            <block type="core/template" name="silpion.dpd.method" template="silpion/dpd/map.phtml"/>
+        </reference>
+    </silpion_dpd_map>
+    <iwd_opc_index_index>
+        <update handle="silpion_dpd_map"/>
+    </iwd_opc_index_index>
+</layout>

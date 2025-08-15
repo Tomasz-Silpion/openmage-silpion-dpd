@@ -1,0 +1,4 @@
+app/code/local/Silpion/DPD
+app/design/frontend/base/default/layout/silpion_dpd.xml
+app/design/frontend/base/default/template/silpion/dpd
+app/etc/modules/Silpion_DPD.xml
